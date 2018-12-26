@@ -54,7 +54,7 @@ class MainPanel extends Component {
 
     componentDidMount() {
         xhr = new XMLHttpRequest();
-        xhr.open("GET","http://172.16.42.3:8000/chillilist",true);
+        xhr.open("GET","http://10.154.164.40:8000/chillilist",true);
         xhr.send();
 
         xhr.addEventListener("readystatechange", this.processRequest, false);
@@ -80,7 +80,7 @@ class MainPanel extends Component {
         console.log(event.target.value)
         console.log(this.state.bottomSelect)
 
-        var newBottomInput = Math.round((this.state.topInput * event.target.value)/this.state.bottomSelect,5);
+        var newBottomInput = ((this.state.topInput * event.target.value)/this.state.bottomSelect).toFixed(2);
 
         this.setState({topSelect : event.target.value})
         this.setState({bottomInput : newBottomInput })
@@ -94,7 +94,7 @@ class MainPanel extends Component {
         console.log(this.state.topSelect)
         console.log(event.target.value)
 
-        var newBottomInput = Math.round((this.state.topInput * this.state.topSelect)/event.target.value,5);
+        var newBottomInput = ((this.state.topInput * this.state.topSelect)/event.target.value).toFixed(2);
 
         this.setState({bottomSelect : event.target.value})
         this.setState({bottomInput : newBottomInput })
