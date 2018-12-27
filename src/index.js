@@ -48,7 +48,7 @@ class MainPanel extends Component {
         }
 
         return this.state.chilliData.map((e, key) => {
-                return <option key={key} value={e.scoville}>{e.name}</option>;
+        return <option key={key} value={e.scoville}>{e.name} - ({e.scoville})</option>;
             })
     } 
 
