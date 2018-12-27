@@ -5,50 +5,41 @@ import "./index.css";
 var destination = document.querySelector("#root");
 var xhr;
 
+
 class MainPanel extends Component {
-    chilliData = [
-        { "scoville": 20000, "name": 'Raja1' },
-        { "scoville": 1, "name": 'Paul' }            
-    ]; 
 
     constructor(){
         super()  
         const chilliDataDefault = [
-            { "scoville": 20000, "name": 'Raja1' },
-            { "scoville": 1, "name": 'Paul' }            
+            { "scoville": 1, "name": '--' },
         ]; 
 
         this.state = { 
             chilliData : chilliDataDefault,
-            topInput : 10,
-            bottomInput : 10,
-            topSelect : -1,
-            bottomSelect : -1
-         }
+            topInput : 1,
+            bottomInput : 1,
+            topSelect : 1,
+            bottomSelect : 1
+        }
+
         this.processRequest = this.processRequest.bind(this);
         this.topSelectChange = this.topSelectChange.bind(this);
         this.bottomSelectChange = this.bottomSelectChange.bind(this);
         this.topInputChange = this.topInputChange.bind(this);
         this.bottomInputChange = this.bottomInputChange.bind(this);
 
+        this.computeCount = this.computeCount.bind(this);
+
     }
     createSelectItems() {
         console.log("Inside Create Select Items")
         console.log(this.state.chilliData)
         console.log(this.state.chilliData[0].scoville)
-
-        if (this.state.topSelect === -1) {
-            var defaultSelect = this.state.chilliData[0].scoville
-        
-            this.setState(function (state, prop) {
-                state.topSelect = defaultSelect;
-                state.bottomSelect =  defaultSelect;
-                return null;
-            });
-        }
+        console.log(this.state.topSelect)
+        console.log(this.state.bottomSelect)
 
         return this.state.chilliData.map((e, key) => {
-        return <option key={key} value={e.scoville}>{e.name} - ({e.scoville})</option>;
+                return <option key={key} value={e.scoville}>{e.name} - ({e.scoville})</option>;
             })
     } 
 
@@ -66,13 +57,24 @@ class MainPanel extends Component {
         console.log(xhr.status)
         if (xhr.readyState === 4 && xhr.status === 200) {
             var respObj = JSON.parse(xhr.responseText);
-            this.setState((prevState, props) => {
+            this.setState((state, props) => {
+                state.topSelect = respObj[0].scoville;
+                state.bottomSelect = respObj[0].scoville;
                 return {chilliData: respObj};
             });
 
         }
     }
 
+    computeCount(fromCount, fromScoville, toScoville) {
+        let count;
+ 
+        if (toScoville !== 0)
+            count = ((fromCount * fromScoville)/toScoville).toFixed(2);
+
+        return count
+    }
+    
     topSelectChange(event){
 
         console.log("Top Select Change")
@@ -80,7 +82,9 @@ class MainPanel extends Component {
         console.log(event.target.value)
         console.log(this.state.bottomSelect)
 
-        var newBottomInput = ((this.state.topInput * event.target.value)/this.state.bottomSelect).toFixed(2);
+        var newBottomInput = this.computeCount(this.state.topInput,
+                                            event.target.value,
+                                            this.state.bottomSelect);
 
         this.setState({topSelect : event.target.value})
         this.setState({bottomInput : newBottomInput })
@@ -94,7 +98,9 @@ class MainPanel extends Component {
         console.log(this.state.topSelect)
         console.log(event.target.value)
 
-        var newBottomInput = ((this.state.topInput * this.state.topSelect)/event.target.value).toFixed(2);
+        var newBottomInput = this.computeCount(this.state.topInput, 
+                                            this.state.topSelect,
+                                            event.target.value);
 
         this.setState({bottomSelect : event.target.value})
         this.setState({bottomInput : newBottomInput })
@@ -105,8 +111,14 @@ class MainPanel extends Component {
 
         console.log("Top Input  Change")
         console.log(event.target.value)
+        console.log(this.state.topSelect)
+        console.log(this.state.bottomSelect)
+        console.log(this.state.bottomInput)
+        console.log(event.target.value)
 
-        var newBottomInput = Math.round((event.target.value * this.state.topSelect)/this.state.bottomSelect,5);
+        var newBottomInput = this.computeCount(event.target.value,
+                                            this.state.topSelect,
+                                            this.state.bottomSelect);
 
         this.setState({topInput: event.target.value})
         this.setState({bottomInput : newBottomInput })
@@ -116,9 +128,14 @@ class MainPanel extends Component {
     bottomInputChange(event){
 
         console.log("Bottom Input Change")
+        console.log(this.state.topInput)
+        console.log(this.state.topSelect)
+        console.log(this.state.bottomSelect)
         console.log(event.target.value)
 
-        var newTopInput = Math.round((event.target.value * this.state.bottomSelect)/this.state.topSelect,5);
+        var newTopInput = this.computeCount(event.target.value, 
+                                        this.state.bottomSelect, 
+                                        this.state.topSelect);
 
         this.setState({bottomInput : event.target.value})
         this.setState({topInput : newTopInput })
