@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "express": "^4.17.1",
+    "http": "^0.0.1-security",
+    "node-libs-browser": "^2.2.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-scripts": "2.1.1"
+    "react-is": "^17.0.1",
+    "react-scripts": "^2.1.8",
+    "serve": "^11.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

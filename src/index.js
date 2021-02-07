@@ -45,7 +45,8 @@ class MainPanel extends Component {
 
     componentDidMount() {
         xhr = new XMLHttpRequest();
-        let restAPI = "http://" + window.location.hostname + ":8000/chillilist";
+        console.log(process.env)
+        let restAPI = "/chillilist";
         xhr.open("GET",restAPI,true);
         xhr.send();
         xhr.addEventListener("readystatechange", this.processRequest, false);
